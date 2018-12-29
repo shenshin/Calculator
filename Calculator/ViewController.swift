@@ -12,26 +12,8 @@ class ViewController: UIViewController {
     
     private var isFinishedTypingNumber : Bool = true
     
- 
-    //var number: Number = Number()
-//    var titleString : String = "0"
-//    var number : Int {
-//        get {
-//            if let number = Int(titleString) {
-//                return number
-//            } else {
-//                return 0
-//            }
-//        }
-//    }
-    
     @IBOutlet weak var displayLabel: UILabel!
     
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//        displayLabel.text = titleString
-//    }
     
     @IBAction func calcButtonPressed(_ sender: UIButton) {
         
@@ -46,7 +28,11 @@ class ViewController: UIViewController {
         if let calcMethod = sender.currentTitle {
             switch calcMethod {
             case "+/-":
-                displayLabel.text = String(number * -1)
+                if number.rounded(.down) == number {
+                    displayLabel.text = String(Int(number) * -1)
+                } else {
+                    displayLabel.text = String(number * -1)
+                }
             case "AC":
                 displayLabel.text = "0"
             case "%":
@@ -65,7 +51,12 @@ class ViewController: UIViewController {
             if isFinishedTypingNumber {
                 if numValue == "." {
                     displayLabel.text = "0."
-                } else {
+                }
+                else if numValue == "0" {
+                    displayLabel.text = "0"
+                    return
+                }
+                else {
                     displayLabel.text = numValue
                 }
                 isFinishedTypingNumber = false

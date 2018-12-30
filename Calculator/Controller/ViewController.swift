@@ -37,21 +37,14 @@ class ViewController: UIViewController {
         //Установка флага окончания ввода текста
         isFinishedTypingNumber = true
         
-        //Нажатие на один из трех унарных операторов
         if let calcMethod = sender.currentTitle {
-            switch calcMethod {
-            case "+/-":
-                displayValue *= -1
-            case "AC":
-                displayValue = 0
-            case "%":
-                displayValue /= 100
-            default:
-                break
+            let calculator = CalculationLogic(number: displayValue)
+            guard let result = calculator.calculate(symbol: calcMethod) else {
+                fatalError("Unknown calculation method")
             }
+            displayValue = result
         }
     }
-
     
     @IBAction func numButtonPressed(_ sender: UIButton) {
         
@@ -79,7 +72,7 @@ class ViewController: UIViewController {
                 if numValue == "." && displayLabel.text!.contains("."){
                     return
                 }
-
+                
                 displayLabel.text! += numValue
             }
         }

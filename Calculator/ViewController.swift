@@ -12,6 +12,23 @@ class ViewController: UIViewController {
     //Флаг окончания ввода текста
     private var isFinishedTypingNumber : Bool = true
     
+    private var displayValue: Double {
+        get {
+            //Параноидальная проверка возможности преобразования текста на дисплее в адекватное число
+            guard let number = Double(displayLabel.text!) else {
+                fatalError("Can not convert display label to a double")
+            }
+            return number
+        }
+        set {
+            if newValue.rounded(.down) == newValue {
+                displayLabel.text = String(Int(newValue))
+            } else {
+                displayLabel.text = String(newValue)
+            }
+        }
+    }
+    
     @IBOutlet weak var displayLabel: UILabel!
     
     
@@ -20,28 +37,17 @@ class ViewController: UIViewController {
         //Установка флага окончания ввода текста
         isFinishedTypingNumber = true
         
-        //Параноидальная проверка возможности преобразования текста на дисплее в адекватное число
-        guard let number = Double(displayLabel.text!) else {
-            fatalError("Can not convert display label to a double")
-        }
-        
-        print(number)
-        
         //Нажатие на один из трех унарных операторов
         if let calcMethod = sender.currentTitle {
             switch calcMethod {
             case "+/-":
-                if number.rounded(.down) == number {
-                    displayLabel.text = String(Int(number) * -1)
-                } else {
-                    displayLabel.text = String(number * -1)
-                }
+                displayValue *= -1
             case "AC":
-                displayLabel.text = "0"
+                displayValue = 0
             case "%":
-                displayLabel.text = String(number / 100)
+                displayValue /= 100
             default:
-                return
+                break
             }
         }
     }
@@ -73,10 +79,7 @@ class ViewController: UIViewController {
                 if numValue == "." && displayLabel.text!.contains("."){
                     return
                 }
-                //Параноидальная проверка возможности преобразования текста на дисплее в адекватное число
-                guard Double(displayLabel.text!) != nil else {
-                    fatalError("Cannot conver display label to a double")
-                }
+
                 displayLabel.text! += numValue
             }
         }

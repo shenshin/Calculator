@@ -10,22 +10,49 @@ import Foundation
 
 struct CalculationLogic {
     
-    var number: Double
+    private var number: Double?
     
-    init(number: Double){
+    private var inermediteCalculation: (number1: Double, calcMethod: String)?
+    
+    mutating func setNumber(_ number: Double){
         self.number = number
     }
     
-    func calculate(symbol: String)->Double?{
-        switch symbol {
-        //Нажатие на один из трех унарных операторов
-        case "+/-":
-            return number * -1
-        case "AC":
-            return 0
-        case "%":
-            return number / 100
-        default:
+    private func performTwoNumCalculation(number2: Double)->Double?{
+        if let number1 = inermediteCalculation?.number1, let operation = inermediteCalculation?.calcMethod {
+            switch operation {
+            case "+":
+                return number1 + number2
+            case "-":
+                return number1 - number2
+            case "÷":
+                return number1 / number2
+            case "×":
+                return number1 * number2
+            default:
+                fatalError("The operation passed in does not match any of the cases")
+            }
+        }
+        return nil
+    }
+    
+    mutating func calculate(symbol: String)->Double?{
+
+        if let n = number {
+            switch symbol {
+            case "+/-":
+                return n * -1
+            case "AC":
+                return 0
+            case "%":
+                return n / 100
+            case "=":
+                return performTwoNumCalculation(number2: n)
+            default:
+                inermediteCalculation = (number1: n, calcMethod: symbol)
+                return n
+            }
+        } else {
             return nil
         }
     }

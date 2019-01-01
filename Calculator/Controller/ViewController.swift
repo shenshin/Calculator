@@ -12,6 +12,8 @@ class ViewController: UIViewController {
     //Флаг окончания ввода текста
     private var isFinishedTypingNumber : Bool = true
     
+    private var calculator = CalculationLogic()
+    
     private var displayValue: Double {
         get {
             //Параноидальная проверка возможности преобразования текста на дисплее в адекватное число
@@ -21,7 +23,7 @@ class ViewController: UIViewController {
             return number
         }
         set {
-            if newValue.rounded(.down) == newValue {
+            if newValue.rounded(.down) == newValue && newValue < Double(Int.max){
                 displayLabel.text = String(Int(newValue))
             } else {
                 displayLabel.text = String(newValue)
@@ -38,7 +40,8 @@ class ViewController: UIViewController {
         isFinishedTypingNumber = true
         
         if let calcMethod = sender.currentTitle {
-            let calculator = CalculationLogic(number: displayValue)
+            //let calculator = CalculationLogic(number: displayValue)
+            calculator.setNumber(displayValue)
             guard let result = calculator.calculate(symbol: calcMethod) else {
                 fatalError("Unknown calculation method")
             }
